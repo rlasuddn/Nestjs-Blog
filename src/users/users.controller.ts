@@ -1,9 +1,18 @@
-import { Body, Controller, Post, UseFilters } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseFilters,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
+import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
+import { CurrentUser } from 'src/common/decorators/user.decorators';
 import { AllExceptionsFilter } from 'src/http-exception.filter';
 import { UserRequestDto } from './dto/user.request.dto';
-import { UserResponseDto } from './dto/user.response.dto';
+import { User } from './users.schemas';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -14,6 +23,12 @@ export class UsersController {
     private readonly authService: AuthService,
   ) {}
 
+  @UseGuards(JwtAuthGuard) //토큰 인증
+  @Get()
+  getCurrentCat(@CurrentUser() user: User) {
+    console.log(user);
+    return user;
+  }
   @Post()
   async singUp(@Body() body: UserRequestDto) {
     await this.usersService.signUp(body);
