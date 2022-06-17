@@ -23,4 +23,9 @@ export class UsersRepository {
     const user = await this.userModel.findOne({ email });
     return user;
   }
+
+  async findUserByIdWithoutPassword(userId: string): Promise<User | null> {
+    const user = await this.userModel.findById(userId).select('-password');
+    return user;
+  }
 }
