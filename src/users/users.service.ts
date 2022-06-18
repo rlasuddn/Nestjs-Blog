@@ -15,8 +15,8 @@ export class UsersService {
     if (isUserExist) {
       throw new UnauthorizedException('이미 존재하는 유저 입니다.');
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const salt = parseInt(process.env.Salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     await this.usersRepository.createUser({
       email,

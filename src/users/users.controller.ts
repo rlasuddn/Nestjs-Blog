@@ -26,7 +26,6 @@ export class UsersController {
   @UseGuards(JwtAuthGuard) //토큰 인증
   @Get()
   getCurrentCat(@CurrentUser() user: User) {
-    console.log(user);
     return user;
   }
   @Post()
