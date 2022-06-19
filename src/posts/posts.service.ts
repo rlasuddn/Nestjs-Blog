@@ -19,4 +19,8 @@ export class PostsService {
   async updatePost(body: PostRequestDto, @Param('postId') postId: string, @CurrentUser() user: User) {
     await this.postsRepository.updatePost(body, postId, user);
   }
+
+  async detailPost(postId: string) {
+    return await this.postsRepository.detailPost(postId);
+  }
 }

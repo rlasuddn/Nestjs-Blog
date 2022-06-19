@@ -11,6 +11,10 @@ import * as bcrypt from 'bcrypt';
 export class PostsRepository {
   constructor(@InjectModel(Post.name) private readonly postModel: Model<Post>) {}
 
+  async showPost() {
+    return await this.postModel.find().select('+ title nickname').sort({ createdAt: -1 });
+  }
+
   async createPost(body: PostRequestDto, @CurrentUser() user: User) {
     const salt = parseInt(process.env.Salt);
     const hashedPassword = await bcrypt.hash(body.password, salt);
@@ -20,10 +24,6 @@ export class PostsRepository {
       password: hashedPassword,
       nickname: user.nickname,
     });
-  }
-
-  async showPost() {
-    return await this.postModel.find().select('+ title nickname').sort({ createdAt: -1 });
   }
 
   async updatePost(body: PostRequestDto, @Param('postId') postId: string, @CurrentUser() user: User) {
@@ -39,5 +39,11 @@ export class PostsRepository {
     }
     console.log(body.title, body.content);
     await this.postModel.findByIdAndUpdate(postId, { $set: { title: body.title, content: body.content } });
+  }
+
+  async detailPost(postId: string) {
+    const findPost = await this.postModel.findById(postId, { password: false, updatedAt: false });
+    if (!findPost) throw new HttpException('해당하는 게시글이 없습니다.', 400);
+    return findPost;
   }
 }
