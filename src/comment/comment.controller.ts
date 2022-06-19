@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, UseFilters, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseFilters, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { CurrentUser } from 'src/common/decorators/user.decorators';
 import { HttpExceptionFilter } from 'src/http-exception.filter';
@@ -10,6 +10,12 @@ import { CommentRequestDto } from './dto/comment.request.dto';
 @UseFilters(HttpExceptionFilter)
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':postId')
+  async showComment(@Param('postId') postId: string) {
+    await this.commentService.showComment(postId);
+  }
 
   @UseGuards(JwtAuthGuard)
   @Post(':postId')

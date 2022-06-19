@@ -10,11 +10,11 @@ import { CommentRequestDto } from './dto/comment.request.dto';
 export class CommentRepository {
   constructor(@InjectModel(Post.name) private readonly postModel: Model<Post>) {}
 
+  async checkPost(@Param('postId') postId: string) {
+    return await this.postModel.findOne({ _id: postId });
+  }
+
   async createComment(@Param('postId') postId: string, body: CommentRequestDto, @CurrentUser() user: User) {
-    const checkPost = await this.postModel.findById(postId);
-    if (!checkPost) {
-      throw new HttpException('해당 게시물이 없습니다.', 400);
-    }
     await this.postModel.findByIdAndUpdate(postId, { $push: { comment: { postId, content: body, nickname: user.nickname } } });
   }
 }
