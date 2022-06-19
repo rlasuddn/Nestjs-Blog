@@ -2,14 +2,14 @@ import { Body, Controller, Get, Param, Patch, Post, Req, UseFilters, UseGuards, 
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { CurrentUser } from 'src/common/decorators/user.decorators';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
-import { AllExceptionsFilter } from 'src/http-exception.filter';
+import { HttpExceptionFilter } from 'src/http-exception.filter';
 import { User } from 'src/users/users.schemas';
 import { PostRequestDto } from './dto/post.request.dto';
 import { PostsService } from './posts.service';
 
 @Controller('posts')
 @UseInterceptors(SuccessInterceptor)
-@UseFilters(AllExceptionsFilter)
+@UseFilters(HttpExceptionFilter)
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 

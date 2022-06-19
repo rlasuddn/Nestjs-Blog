@@ -6,9 +6,7 @@ import { User } from './users.schemas';
 
 @Injectable()
 export class UsersRepository {
-  constructor(
-    @InjectModel(User.name) private readonly userModel: Model<User>,
-  ) {}
+  constructor(@InjectModel(User.name) private readonly userModel: Model<User>) {}
 
   async existsByEmail(email: string): Promise<boolean> {
     const result = (await this.userModel.findOne({ email })) ? true : false;

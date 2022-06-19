@@ -35,5 +35,10 @@ export class Post extends Document {
   @IsNotEmpty()
   @IsString()
   password: string;
+
+  @Prop({
+    required: true,
+  })
+  comment: [{ postId: string; content: string; nickname: string }];
 }
 export const PostSchema = SchemaFactory.createForClass(Post);
