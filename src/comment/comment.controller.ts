@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseFilters, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseFilters, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { CurrentUser } from 'src/common/decorators/user.decorators';
 import { HttpExceptionFilter } from 'src/http-exception.filter';
@@ -14,7 +14,7 @@ export class CommentController {
   @UseGuards(JwtAuthGuard)
   @Get(':postId')
   async showComment(@Param('postId') postId: string) {
-    await this.commentService.showComment(postId);
+    return await this.commentService.showComment(postId);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -22,5 +22,19 @@ export class CommentController {
   async createComment(@Param('postId') postId: string, @Body() body: CommentRequestDto, @CurrentUser() user: User) {
     await this.commentService.createComment(postId, body, user);
     return { message: '댓글 작성 완료!' };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':postId/:commentId')
+  async updateComment(@Param('postId') postId: string, @Param('commentId') commentId: string, @Body() body: CommentRequestDto, @CurrentUser() user: User) {
+    await this.commentService.updateComment(postId, commentId, body, user);
+    return { message: '댓글 수정 완료!' };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':postId/:commentId')
+  async deleteComment(@Param('postId') postId: string, @Param('commentId') commentId: string, @CurrentUser() user: User) {
+    await this.commentService.deleteComment(postId, commentId, user);
+    return { message: '댓글 삭제 완료!' };
   }
 }

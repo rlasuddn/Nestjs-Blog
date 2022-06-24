@@ -1,10 +1,23 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { Document, SchemaOptions } from 'mongoose';
+import mongoose, { Document, SchemaOptions } from 'mongoose';
 
 const options: SchemaOptions = {
   timestamps: true,
 };
+
+@Schema()
+export class Comment {
+  @Prop({ required: true })
+  @IsNotEmpty()
+  @IsString()
+  content: string;
+  @Prop({ required: true })
+  @IsNotEmpty()
+  @IsString()
+  nickname: string;
+}
+const CommentSchema = SchemaFactory.createForClass(Comment);
 
 @Schema(options)
 export class Post extends Document {
@@ -37,8 +50,8 @@ export class Post extends Document {
   password: string;
 
   @Prop({
-    required: true,
+    type: [CommentSchema],
   })
-  comment: [{ postId: string; content: string; nickname: string }];
+  comment: Comment[];
 }
 export const PostSchema = SchemaFactory.createForClass(Post);
