@@ -35,7 +35,7 @@ export class PostsRepository {
       throw new UnauthorizedException('비밀번호를 확인해주세요.');
     }
     if (currentUser !== postUser.nickname) {
-      throw new HttpException('잘못된 접근입니다.', 400);
+      throw new HttpException('잘못된 접근입니다.', 409);
     }
     console.log(body.title, body.content);
     await this.postModel.findByIdAndUpdate(postId, { $set: { title: body.title, content: body.content } });
